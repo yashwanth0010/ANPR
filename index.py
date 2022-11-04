@@ -23,7 +23,7 @@ top.title('Number Plate Recognition')
 top.iconphoto(True, PhotoImage(file="logo_w.png"))
 img = ImageTk.PhotoImage(Image.open("logo_w.png"))
 
-label = Label(top, text = "ANR",bg="#353935",fg="#0313fc",font=('Times', 35))
+label = Label(top, text = "ANPR",bg="#353935",fg="#0313fc",font=('Times', 35))
 label.pack()
 
 im1=Image.open("logo_w.png")
