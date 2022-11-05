@@ -12,8 +12,15 @@ import cv2
 import pytesseract as tess
 from stateName import *
 from String_m import *
-#test
-#xyz
+import openpyxl 
+from datetime import datetime
+
+now = datetime.now()
+
+wb = openpyxl.load_workbook("Data.xlsx") 
+  
+sheet = wb.active
+
 
 top=tk.Tk()
 top.geometry('1920x1080')
@@ -150,6 +157,14 @@ def classify(file_path):
     #STATES 
     s=stateName(text)
     print(s)
+
+    #DATA INTO EXCEL SHEET
+    now = datetime.now()
+    dt= now.strftime("%d/%m/%Y %H:%M:%S")
+    data=(dt[0:11],dt[11:len(dt)],text,s[8:len(s)])
+    print(dt)
+    sheet.append(data)
+    wb.save('Data.xlsx')
 
     font = cv2.FONT_HERSHEY_SIMPLEX
     #res = cv2.putText(img, text=text, org=(approx[0][0][0], approx[1][0][1]+60), fontFace=font, fontScale=1, color=(0,255,0), thickness=2, lineType=cv2.LINE_AA)
