@@ -8,7 +8,7 @@ pipeline {
 
 				steps {
 
-					echo 'Building..'
+					echo 'Building '
 					script{
 					//used to write some complex logic
 					}
