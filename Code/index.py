@@ -6,6 +6,7 @@ from PIL import ImageTk, Image
 from tkinter import PhotoImage
 import numpy as np
 from matplotlib import pyplot as plt
+import imutils
 import easyocr
 import cv2
 import pytesseract as tess
