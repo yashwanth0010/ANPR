@@ -1,0 +1,150 @@
+/* Styles for Home page - plain CSS, no Tailwind */
+.home-root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #f7f9fc 0%, #ffffff 100%);
+  padding: 32px;
+  box-sizing: border-box;
+}
+
+.card {
+  width: 100%;
+  max-width: 820px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(30, 60, 90, 0.08);
+  padding: 28px;
+  box-sizing: border-box;
+}
+
+.title {
+  margin: 0 0 16px 0;
+  font-size: 22px;
+  color: #102a43;
+}
+
+.upload-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+.btn {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.upload-btn {
+  background: linear-gradient(90deg, #0066ff, #0050d4);
+  color: white;
+}
+
+.clear-btn {
+  background: #fff;
+  border: 1px solid #e1e8f0;
+  color: #253858;
+  padding: 6px 10px;
+}
+
+.submit-btn {
+  background: #00a884;
+  color: white;
+}
+
+.file-info {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex: 1;
+}
+
+.file-name {
+  font-size: 14px;
+  color: #102a43;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 360px;
+}
+
+.muted {
+  color: #627d98;
+}
+
+.preview {
+  margin: 12px 0 18px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  max-height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e6eef8;
+  background: #fbfdff;
+}
+
+.preview img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.label {
+  display: block;
+  margin-bottom: 6px;
+  color: #243b53;
+  font-weight: 600;
+}
+
+.text-box {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #dde8f5;
+  resize: vertical;
+  font-size: 14px;
+  color: #102a43;
+}
+
+.meta-row {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.char-count {
+  color: #627d98;
+  font-size: 13px;
+}
+
+@media (max-width: 520px) {
+  .card {
+    padding: 18px;
+  }
+
+  .upload-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .file-info {
+    justify-content: space-between;
+  }
+}

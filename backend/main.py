@@ -1,66 +1,50 @@
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import JSONResponse
+import shutil
 from sre_parse import State
-import tkinter as tk
-from tkinter import filedialog
-from tkinter import *
-from PIL import ImageTk, Image
-from tkinter import PhotoImage
 import numpy as np
 from matplotlib import pyplot as plt
 import imutils
 import easyocr
 import cv2
-import pytesseract as tess
 from stateName import *
 from String_m import *
-import openpyxl 
 from datetime import datetime
+from fastapi.middleware.cors import CORSMiddleware
 
-now = datetime.now()
+app = FastAPI()
 
-wb = openpyxl.load_workbook("Data.xlsx") 
-  
-sheet = wb.active
+origins = [
+    "http://localhost:3000",       # React dev server
+    "http://172.29.78.177:8000"    # Optional if you access via IP
+]
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # allow your frontend
+    allow_credentials=True,
+    allow_methods=["*"],    # GET, POST, etc.
+    allow_headers=["*"],    # allow all headers
+)
 
-top=tk.Tk()
-top.geometry('1920x1080')
-top.title('Number Plate Recognition')
-#top.iconphoto(True, PhotoImage(file="logo.jpg"))
+app = FastAPI()
 
-top.iconphoto(True, PhotoImage(file="logo_w.png"))
-img = ImageTk.PhotoImage(Image.open("logo_w.png"))
+@app.post("/upload")
+async def upload_image(file: UploadFile = File(...)):
+    # Save the uploaded file
+    file_location = f"uploads/{file.filename}"
+    with open(file_location, "wb") as f:
+        shutil.copyfileobj(file.file, f)
+    
+    # Run your image processing script here
+    result = my_image_processing(file_location)  # define your function
+    
+    return JSONResponse({"result": result})
 
-label = Label(top, text = "ANPR",bg="#353935",fg="#0313fc",font=('Times', 35))
-label.pack()
-
-im1=Image.open("logo_w.png")
-ima = im1.resize((330,260))
-img = ImageTk.PhotoImage(ima)
-
-top.configure(background='#353935')
-label=Label(top,background='#CDCDCD', font=('arial',35,'bold'))
-
-label1 = tk.Label(image=img)
-label1.image = ima
-label1.place(x=600, y=70)
-
-label.pack()
-
-#label.grid(row=0,column=1)
-ran=Image.open("Upload2.jpg")
-ran=ran.resize((300,200))
-up=ImageTk.PhotoImage(ran)
-
-sign_image = Label(top,image=up)  
-plate_image=Label(top,bd=10)
-
-State1 = Label(top, text = "",bg="#353935",foreground='#FFFFFF', font=('Times', 24))
-
-
-def classify(file_path):
+def my_image_processing(path):
     res_text=[0]
     res_img=[0]
-    img = cv2.imread(file_path)
+    img = cv2.imread(path)
    # img=img.resize((300,300))
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -157,16 +141,6 @@ def classify(file_path):
     #STATES 
     s=stateName(text)
     print(s)
-
-    #DATA INTO EXCEL SHEET
-    now = datetime.now()
-    dt= now.strftime("%d/%m/%Y %H:%M:%S")
-    data=(dt[0:11],dt[11:len(dt)],text,s[8:len(s)])
-    print(dt)
-    sheet.append(data)
-    wb.save('Data.xlsx')
-
-    font = cv2.FONT_HERSHEY_SIMPLEX
     #res = cv2.putText(img, text=text, org=(approx[0][0][0], approx[1][0][1]+60), fontFace=font, fontScale=1, color=(0,255,0), thickness=2, lineType=cv2.LINE_AA)
     #res = cv2.rectangle(img, tuple(approx[0][0]), tuple(approx[0][0]), (0,255,0),3)
 
@@ -174,60 +148,10 @@ def classify(file_path):
     plt.show()
     cv2.waitKey(0)
     cv2.destroyAllWindows()"""
-    label.configure(foreground='#FFFFFF', text=text,bg="#353935") 
-
-    State1.configure(text=s)
-
     #uploaded=Image.open("result.png")
     """im=ImageTk.PhotoImage(uploaded)
     plate_image.configure(image=im)
     plate_image.image=im
     plate_image.pack()
     plate_image.place(x=560,y=320)"""
-
-def show_classify_button(file_path):
-    classify_b=Button(top,text="Get Text",command=lambda: classify(file_path),padx=10,pady=5)
-    classify_b.configure(background='#3734eb', foreground='white',font=('arial',15,'bold'))
-    classify_b.place(x=1000,y=650)
-
-def upload_image():
-    try:
-        file_path=filedialog.askopenfilename()
-        uploaded=Image.open(file_path)
-        
-        uploaded.thumbnail(((top.winfo_width()/5),(top.winfo_height()/5)))
-        #uploaded.place(x=650, y=2000)
-        
-
-        im=ImageTk.PhotoImage(uploaded)
-        sign_image.configure(image=im)
-        sign_image.image=im
-        #sign_image=sign_image.resize((300,300))
-        #sign_image.place(x=100, y=400)     
-        label.configure(text='')
-
-        State1.configure(text='')
-        show_classify_button(file_path)
-    except:
-        pass
-
-upload=Button(top,text="Upload an image",command=upload_image,padx=10,pady=5)
-upload.configure(background='#3734eb', foreground='white',font=('arial',15,'bold'))
-upload.pack()
-upload.place(x=210,y=650)
-
-sign_image.pack()
-sign_image.place(x=150,y=400)
-
-label.pack()
-label.place(x=925,y=400)
-
-State1.pack()
-State1.place(x = 925,y =500 )
-
-
-#heading = Label(top,image=None)
-#heading.configure(background='#3734eb',foreground='#3734eb')
-#heading.pack()
-
-top.mainloop()
+    return text

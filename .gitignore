@@ -1,2 +1,5 @@
 Application - Copy.zip
 Application/
+backend/venv/
+backend/__pycache__/
+backend/.vscode/
