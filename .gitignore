@@ -3,3 +3,4 @@ Application/
 backend/venv/
 backend/__pycache__/
 backend/.vscode/
+__pycache__
