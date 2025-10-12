@@ -48,8 +48,8 @@ pipeline {
                         """
                     }
                 }
-            }
         }
+        
 
         stage('Cleanup') {
             steps {
@@ -69,4 +69,6 @@ pipeline {
             echo "❌ Build failed. Check logs."
         }
     }
+
 }
+
