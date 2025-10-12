@@ -6,6 +6,7 @@ export default function Home() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [result, setResult] = useState<{ plate: string; state: string }>({ plate: "", state: "" });
   const [loading, setLoading] = useState(false);
+  
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0] || null;
@@ -27,7 +28,7 @@ export default function Home() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://172.29.78.177:8000/upload", {
+      const response = await fetch("http://localhost:8000/upload", {
         method: "POST",
         body: formData,
       });

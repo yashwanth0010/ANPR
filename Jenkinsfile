@@ -2,57 +2,71 @@ pipeline {
     agent any
 
     environment {
-        // DockerHub credentials ID (create in Jenkins → Credentials)
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
-        // Replace with your DockerHub username and repo name
-        IMAGE_NAME = 'yash0010/anpr'
+        DOCKERHUB_USER = 'yash0010'
+        FRONTEND_IMAGE = "${DOCKERHUB_USER}/anpr-frontend"
+        BACKEND_IMAGE = "${DOCKERHUB_USER}/anpr-backend"
+        VERSION = "${env.BUILD_NUMBER}"
+        FRONTEND_TAG = "${VERSION}"
+        BACKEND_TAG = "${VERSION}"
     }
 
     stages {
-        stage('Build Docker Image') {
+        stage('Checkout') {
+            steps {
+                git branch: 'release', url: 'https://github.com/yashwanth0010/ANPR.git'
+            }
+        }
+
+        stage('Build Backend Image') {
             steps {
                 script {
-                    // Create a simple version tag
-                    COMMIT_HASH = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
-                    VERSION_TAG = "${BUILD_NUMBER}-${COMMIT_HASH}"
-
-                    echo "🚧 Building Docker image: ${IMAGE_NAME}:${VERSION_TAG}"
                     sh """
-                        docker build -t ${IMAGE_NAME}:${VERSION_TAG} -t ${IMAGE_NAME}:latest .
+                        docker build -t ${BACKEND_IMAGE}:${BACKEND_TAG} ./backend
                     """
                 }
             }
         }
 
-        stage('Push to DockerHub') {
+        stage('Build Frontend Image') {
             steps {
                 script {
-                    echo "📦 Pushing image ${IMAGE_NAME}:${VERSION_TAG} to DockerHub..."
                     sh """
-                        echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
-                        docker push ${IMAGE_NAME}:${VERSION_TAG}
-                        docker push ${IMAGE_NAME}:latest
+                        docker build -t ${FRONTEND_IMAGE}:${FRONTEND_TAG} ./frontend
                     """
                 }
             }
         }
 
-        stage('Clean Up') {
+        stage('Push Images to Docker Hub') {
             steps {
                 script {
-                    echo "🧹 Cleaning up local images..."
-                    sh "docker rmi ${IMAGE_NAME}:${VERSION_TAG} ${IMAGE_NAME}:latest || true"
+                        sh """
+                             echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
+                            docker push ${BACKEND_IMAGE}:${BACKEND_TAG}
+                            docker push ${FRONTEND_IMAGE}:${FRONTEND_TAG}
+                        """
+                    }
                 }
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                sh """
+                    docker rmi ${BACKEND_IMAGE}:${BACKEND_TAG} || true
+                    docker rmi ${FRONTEND_IMAGE}:${FRONTEND_TAG} || true
+                """
             }
         }
     }
 
     post {
         success {
-            echo "✅ Successfully built and pushed image: ${IMAGE_NAME}:${VERSION_TAG}"
+            echo "✅ Successfully built and pushed images to Docker Hub!"
         }
         failure {
-            echo "❌ Build failed — check console output for errors."
+            echo "❌ Build failed. Check logs."
         }
     }
 }

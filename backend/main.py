@@ -17,8 +17,8 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000",       # React dev server
-    "http://172.29.78.177:8000"    # Optional if you access via IP
+    "http://localhost:3000",       
+    "http://frontend:3000"    # When containers talk to each other via service name   # Optional if you access via IP
 ]
 
 app.add_middleware(
