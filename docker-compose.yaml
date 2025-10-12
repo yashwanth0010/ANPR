@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  backend:
+    build: ./backend
+    container_name: anpr-backend
+    ports:
+      - "${BACKEND_PORT}:8000"
+    volumes:
+      - ./backend:/app
+    networks:
+      - anpr-net
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: anpr-frontend
+    ports:
+      - "${FRONTEND_PORT}:3000"
+    depends_on:
+      - backend
+    networks:
+      - anpr-net
+
+networks:
+  anpr-net:
+    driver: bridge

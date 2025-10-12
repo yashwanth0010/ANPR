@@ -1,0 +1,35 @@
+# Python-specific
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+
+# Virtual environments
+venv/
+env/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Large files or data
+*.zip
+*.tar
+*.tar.gz
+data/
+models/
+
+# Logs and caches
+*.log
+logs/
+.cache/
+
+# Node junk (if fullstack repo)
+node_modules/
+build/
+dist/
